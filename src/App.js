@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState } from "react"
+import { allToppings } from "./components/Data"
+import { Checkbox } from "./components/Checkbox"
 function App() {
+  const [toppings, setToppings] = useState(allToppings)
+
+  const updateCheckStatus = index => {
+    setToppings(
+      toppings.map((topping, currentIndex) =>
+        currentIndex === index
+          ? { ...topping, checked: !topping.checked }
+          : topping
+      )
+    )
+  }
+
+  const selectAll = () => {
+    setToppings(toppings.map(topping => ({ ...topping, checked: true })))
+  }
+  const unSelectAll = () => {
+    setToppings(toppings.map(topping => ({ ...topping, checked: false })))
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>
+        <button onClick={selectAll}>Select All</button>
+        <button onClick={unSelectAll}>Unselect All</button>
+      </p>
+
+      {toppings.map((topping, index) => (
+        <Checkbox
+          key={topping.name}
+          isChecked={topping.checked}
+          checkHandler={() => updateCheckStatus(index)}
+          label={topping.name}
+          index={index}
+        />
+      ))}
+      <p>
+        <pre>{JSON.stringify(toppings, null, 2)}</pre>
+      </p>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
